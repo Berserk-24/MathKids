@@ -2,6 +2,8 @@
 // Aquí se define TODA la estructura de contenido de MathKids.
 // Agregar un nuevo módulo o actividad = añadir un objeto a este archivo.
 
+import { title } from "framer-motion/client"
+
 export const MODULES = [
   {
     id: 'sumas',
@@ -74,6 +76,24 @@ export const MODULES = [
         difficulty: 2,
       },
     ],
+  },
+  {
+  id: 'Problemas',
+    title: 'Problemas Matematicos',
+    emoji: '🍕',
+    description: 'Entiende las Matematicas con Problemas mas Elaborados.',
+    color: 'sun',
+    bgClass: 'bg-sun',
+    shadowClass: 'shadow-[0_4px_0_#F0C730]',
+    borderClass: 'border-sun',
+    activities: [
+      {
+        id: 'identificacion',
+        title: '¿Como resolver problemas matematicos?',
+        type: 'multiple-choice',
+        difficulty: 2,
+      },
+    ],  
   },
 ]
 
