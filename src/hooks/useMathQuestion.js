@@ -24,11 +24,11 @@ const GENERATORS = {
     const b = rand(1, 10)
     return { question: `${a} × ${b}`, answer: a * b, a, b, op: '×' }
   },
-  fracciones: () => {
-    const denominators = [2, 3, 4, 5, 8]
-    const den = denominators[rand(0, denominators.length - 1)]
-    const num = rand(1, den - 1)
-    return { question: `${num}/${den}`, answer: num, a: num, b: den, op: '/' }
+  Division: () => {
+    const b = rand(1, 10)       
+    const answer = rand(1, 10)  
+    const a = b * answer        
+    return { question: `${a} ÷ ${b}`, answer, a, b, op: '÷' }
   },
 }
 

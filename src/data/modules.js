@@ -58,10 +58,10 @@ export const MODULES = [
     ],
   },
   {
-    id: 'fracciones',
-    title: 'Fracciones',
+    id: 'Division',
+    title: 'Divisiones',
     emoji: '🍕',
-    description: 'Entiende las fracciones con visualizaciones.',
+    description: 'Entiende las Divisiones con visualizaciones.',
     color: 'sun',
     bgClass: 'bg-sun',
     shadowClass: 'shadow-[0_4px_0_#F0C730]',
@@ -69,7 +69,7 @@ export const MODULES = [
     activities: [
       {
         id: 'identificacion',
-        title: '¿Qué fracción es?',
+        title: '¿Qué division es?',
         type: 'multiple-choice',
         difficulty: 2,
       },
