@@ -1,3 +1,5 @@
+<img width="1851" height="887" alt="image" src="https://github.com/user-attachments/assets/eb191495-fefc-42c2-940d-0f00186dc0ce" />
+
 # 🧮 MathKids – Aprende Jugando
 
 Plataforma educativa interactiva de matemáticas para niños de 7 a 11 años.
