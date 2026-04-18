@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import SoundButton from '../components/SoundButton'
 
 // Formas decorativas de fondo
 const SHAPES = [
@@ -58,7 +59,7 @@ export default function Home() {
         </h1>
 
         <p className="text-2xl font-body font-700 text-ink/60 mb-10">
-          ¡Aprende matemáticas jugando! 🎉
+          ¡Aprende matemáticas jugando!
         </p>
 
         {/* Estadísticas rápidas (placeholder) */}
@@ -76,20 +77,15 @@ export default function Home() {
         </div>
 
         {/* CTA */}
-        <motion.button
-          className="btn-primary text-2xl px-12 py-4"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => navigate('/modules')}
-        >
-          ¡Empezar! 🚀
-        </motion.button>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
+          <SoundButton
+            className="btn-primary text-2xl px-12 py-4"
+            onClick={() => navigate('/modules')}
+          >
+            ¡Empezar!
+          </SoundButton>
+        </motion.div>
       </motion.div>
-
-      {/* Footer simple */}
-      <p className="absolute bottom-4 text-sm text-ink/30 font-body">
-        MathKids v0.1 · Aprende Jugando
-      </p>
     </div>
   )
 }

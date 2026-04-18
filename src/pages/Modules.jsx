@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { MODULES } from '../data/modules'
 import ModuleCard from '../components/ModuleCard'
+import SoundButton from '../components/SoundButton'
 
 export default function Modules() {
   const navigate = useNavigate()
@@ -46,12 +47,17 @@ export default function Modules() {
         {/* Grid de módulos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {MODULES.map((mod, i) => (
-            <ModuleCard
+            <SoundButton
               key={mod.id}
-              module={mod}
-              index={i}
+              className="text-left"
+              style={{ all: 'unset', cursor: 'pointer', display: 'block' }}
               onClick={() => handleSelectModule(mod)}
-            />
+            >
+              <ModuleCard
+                module={mod}
+                index={i}
+              />
+            </SoundButton>
           ))}
         </div>
       </main>

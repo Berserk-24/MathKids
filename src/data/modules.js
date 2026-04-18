@@ -1,5 +1,5 @@
 // ─── Catálogo de módulos y actividades ───────────────────────────────────────
-// Aquí se define TODA la estructura de contenido de MathKids.
+// Aquí se define TODA la estructura de contenido.
 // Agregar un nuevo módulo o actividad = añadir un objeto a este archivo.
 
 import { title } from "framer-motion/client"
@@ -60,9 +60,9 @@ export const MODULES = [
     ],
   },
   {
-    id: 'Division',
+    id: 'division',
     title: 'Divisiones',
-    emoji: '🍕',
+    emoji: '➗',
     description: 'Entiende las Divisiones con visualizaciones.',
     color: 'sun',
     bgClass: 'bg-sun',
@@ -78,9 +78,9 @@ export const MODULES = [
     ],
   },
   {
-  id: 'Problemas',
+    id: 'problemas',
     title: 'Problemas Matematicos',
-    emoji: '🍕',
+    emoji: '🔢',
     description: 'Entiende las Matematicas con Problemas mas Elaborados.',
     color: 'sun',
     bgClass: 'bg-sun',
