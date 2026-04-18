@@ -70,7 +70,7 @@ export const MODULES = [
     borderClass: 'border-sun',
     activities: [
       {
-        id: 'identificacion',
+        id: 'division-basica',
         title: '¿Qué division es?',
         type: 'multiple-choice',
         difficulty: 2,
@@ -88,7 +88,7 @@ export const MODULES = [
     borderClass: 'border-sun',
     activities: [
       {
-        id: 'identificacion',
+        id: 'problemas-matematicos',
         title: '¿Como resolver problemas matematicos?',
         type: 'multiple-choice',
         difficulty: 2,

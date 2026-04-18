@@ -7,7 +7,7 @@ import FeedbackOverlay             from '../components/FeedbackOverlay'
 import ScoreBar                    from '../components/ScoreBar'
 
 // ─── Actividad: Respuesta Directa ────────────────────────────────────────────
-function DirectAnswerActivity({ question, onAnswer }) {
+function DirectAnswerActivity({ question, onAnswer, moduleId }) {
   const [input, setInput] = useState('')
 
   const submit = () => {
@@ -16,17 +16,26 @@ function DirectAnswerActivity({ question, onAnswer }) {
     setInput('')
   }
 
+  // Estilos especiales solo para el módulo de problemas
+  const isProblemas = moduleId === 'problemas'
+  const preguntaClass = isProblemas
+    ? 'font-display text-xl md:text-2xl text-ink tracking-tight'
+    : 'font-display text-3xl text-ink tracking-tight'
+  const cardClass = isProblemas
+    ? 'card text-center py-12 px-8 w-full max-w-2xl'
+    : 'card text-center py-10 px-16 w-full max-w-sm'
+
   return (
     <div className="flex flex-col items-center gap-6">
       {/* Pregunta */}
       <motion.div
         key={question.question}
-        className="card text-center py-10 px-16 w-full max-w-sm"
+        className={cardClass}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
-        <p className="font-display text-7xl text-ink tracking-tight">
+        <p className={preguntaClass}>
           {question.question} <span className="text-coral">=</span> ?
         </p>
       </motion.div>
@@ -61,7 +70,7 @@ function DirectAnswerActivity({ question, onAnswer }) {
 }
 
 // ─── Actividad: Selección Múltiple ───────────────────────────────────────────
-function MultipleChoiceActivity({ question, onAnswer }) {
+function MultipleChoiceActivity({ question, onAnswer, moduleId }) {
   const [selected, setSelected] = useState(null)
 
   const choose = (choice) => {
@@ -73,21 +82,33 @@ function MultipleChoiceActivity({ question, onAnswer }) {
     }, 600)
   }
 
+  // Estilos especiales solo para el módulo de problemas
+  const isProblemas = moduleId === 'problemas'
+  const preguntaClass = isProblemas
+    ? 'font-display text-xl md:text-2xl text-ink tracking-tight'
+    : 'font-display text-7xl text-ink tracking-tight'
+  const cardClass = isProblemas
+    ? 'card text-center py-12 px-8 w-full max-w-2xl'
+    : 'card text-center py-10 px-16 w-full max-w-sm'
+  const gridClass = isProblemas
+    ? 'grid grid-cols-2 gap-3 w-full max-w-xl'
+    : 'grid grid-cols-2 gap-3 w-full max-w-sm'
+
   return (
     <div className="flex flex-col items-center gap-6">
       <motion.div
         key={question.question}
-        className="card text-center py-10 px-16 w-full max-w-sm"
+        className={cardClass}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
-        <p className="font-display text-7xl text-ink tracking-tight">
+        <p className={preguntaClass}>
           {question.question} <span className="text-coral">=</span> ?
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-2 gap-3 w-full max-w-sm">
+      <div className={gridClass}>
         {question.choices.map((choice) => {
           const isCorrect  = choice === question.answer
           const isSelected = choice === selected
@@ -238,10 +259,10 @@ export default function Activity() {
 
             {/* Actividad según tipo */}
             {activity.type === 'direct-answer' && (
-              <DirectAnswerActivity question={question} onAnswer={handleAnswer} />
+              <DirectAnswerActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
             )}
             {activity.type === 'multiple-choice' && (
-              <MultipleChoiceActivity question={question} onAnswer={handleAnswer} />
+              <MultipleChoiceActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
             )}
 
             {/* Feedback */}

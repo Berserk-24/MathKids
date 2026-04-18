@@ -50,7 +50,7 @@ export default function Modules() {
             <SoundButton
               key={mod.id}
               className="text-left"
-              style={{ all: 'unset', cursor: 'pointer', display: 'block' }}
+              style={{cursor: 'pointer', display: 'block' }}
               onClick={() => handleSelectModule(mod)}
             >
               <ModuleCard

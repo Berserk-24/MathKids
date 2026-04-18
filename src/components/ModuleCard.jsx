@@ -32,11 +32,11 @@ const colorMap = {
   },
 }
 
-export default function ModuleCard({ module, onClick, index }) {
+export default function ModuleCard({ module, index }) {
   const c = colorMap[module.color] ?? colorMap.coral
 
   return (
-    <motion.button
+    <motion.div
       className={`
         card w-full text-left cursor-pointer border-2 ${c.border}
         transition-all duration-200 ${c.shadow}
@@ -45,7 +45,6 @@ export default function ModuleCard({ module, onClick, index }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.4 }}
-      onClick={onClick}
       aria-label={`Ir al módulo ${module.title}`}
     >
       {/* Icono del módulo */}
@@ -61,6 +60,6 @@ export default function ModuleCard({ module, onClick, index }) {
       <span className={`inline-block text-xs font-body font-700 px-3 py-1 rounded-full ${c.badge}`}>
         {module.activities.length} actividad{module.activities.length !== 1 ? 'es' : ''}
       </span>
-    </motion.button>
+    </motion.div>
   )
 }
