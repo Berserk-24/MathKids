@@ -4,12 +4,12 @@ import SoundButton from '../components/SoundButton'
 
 // Formas decorativas de fondo
 const SHAPES = [
-  { emoji: '➕', top: '10%', left: '5%',  size: 'text-5xl', delay: 0 },
-  { emoji: '✖️', top: '20%', right: '8%', size: 'text-4xl', delay: 0.5 },
-  { emoji: '➖', bottom: '25%', left: '8%', size: 'text-4xl', delay: 1 },
-  { emoji: '🔢', top: '60%', right: '6%', size: 'text-5xl', delay: 0.3 },
-  { emoji: '🌟', top: '40%', left: '3%', size: 'text-3xl', delay: 0.8 },
-  { emoji: '🎮', bottom: '12%', right: '10%', size: 'text-4xl', delay: 0.2 },
+  { emoji: '➕', top: '10%', left: '5%',  size: 'text-8xl', delay: -10 },
+  { emoji: '✖️', top: '20%', right: '8%', size: 'text-7xl', delay: 0.5 },
+  { emoji: '➖', bottom: '25%', left: '8%', size: 'text-7xl', delay: 1 },
+  { emoji: '🔢', top: '60%', right: '6%', size: 'text-8xl', delay: 0.3 },
+  { emoji: '🌟', top: '40%', left: '3%', size: 'text-6xl', delay: 0.8 },
+  { emoji: '🎮', bottom: '12%', right: '10%', size: 'text-7xl', delay: 0.2 },
 ]
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
           key={i}
           className={`absolute ${s.size} select-none pointer-events-none opacity-30`}
           style={{ top: s.top, left: s.left, right: s.right, bottom: s.bottom }}
-          animate={{ y: [0, -10, 0] }}
+          animate={{opacity: [0.5, 1, 0.5], y: [0, -15, 0] }}
           transition={{ duration: 3, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
         >
           {s.emoji}
@@ -65,7 +65,7 @@ export default function Home() {
         {/* Estadísticas rápidas (placeholder) */}
         <div className="flex justify-center gap-6 mb-10">
           {[
-            { label: 'Módulos', value: '4' },
+            { label: 'Módulos', value: '5' },
             { label: 'Actividades', value: '8+' },
             { label: 'Diversión', value: '∞' },
           ].map(({ label, value }) => (

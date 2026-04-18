@@ -27,7 +27,7 @@ export default function Modules() {
           >
             ←
           </button>
-          <h1 className="font-display text-3xl text-ink">
+          <h1 className="font-caveat text-4xl sm:text-6xl text-ink drop-shadow-lg font-extrabold tracking-tight bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-gradient-x">
             Elige un módulo 📚
           </h1>
         </div>
@@ -36,7 +36,7 @@ export default function Modules() {
       {/* Contenido */}
       <main className="max-w-4xl mx-auto px-4 py-8">
         <motion.p
-          className="font-body text-ink/50 text-lg mb-8"
+          className="font-caveat text-xl sm:text-4xl mb-8 text-pink-600 font-semibold drop-shadow-md animate-bounce"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}

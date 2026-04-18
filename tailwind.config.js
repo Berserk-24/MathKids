@@ -6,6 +6,7 @@ export default {
       fontFamily: {
         display: ['Fredoka One', 'cursive'],
         body: ['Nunito', 'sans-serif'],
+        caveat: ['Caveat', 'cursive'],
       },
       colors: {
         coral:   { DEFAULT: '#FF6B35', light: '#FF8C5A', dark: '#E05A28' },
