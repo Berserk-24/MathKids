@@ -95,6 +95,24 @@ export const MODULES = [
       },
     ],  
   },
+  {
+    id: 'fracciones',
+    title: 'Fracciones',
+    emoji: '🔢',
+    description: 'Aprende de fracciones y sus operaciones.',
+    color: 'sun',
+    bgClass: 'bg-sun',
+    shadowClass: 'shadow-[0_4px_0_#F0C730]',
+    borderClass: 'border-sun',
+    activities: [
+      {
+        id: 'fracciones-sencillas',
+        title: 'Resolvamos fracciones',
+        type: 'multiple-choice',
+        difficulty: 2,
+      },
+    ],  
+  },
 ]
 
 // Devuelve un módulo por su id

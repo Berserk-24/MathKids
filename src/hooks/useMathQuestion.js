@@ -106,6 +106,92 @@ const GENERATORS = {
 
     return { question, answer, a, b, op: tipo }
   },
+  fracciones: () => {
+  const denominadores = [2, 3, 4, 5, 6]
+
+  const randDen = () => denominadores[rand(0, denominadores.length - 1)]
+  const randNum = (den) => rand(1, den - 1)
+
+  const tipos = ['suma', 'resta', 'multiplicacion', 'division']
+  const tipo = tipos[rand(0, tipos.length - 1)]
+
+  let n1, d1, n2, d2
+  let resN, resD
+
+  // MCD para simplificar
+  const mcd = (a, b) => (b === 0 ? a : mcd(b, a % b))
+
+  const simplificar = (n, d) => {
+    const div = mcd(n, d)
+    return [n / div, d / div]
+  }
+
+  switch (tipo) {
+    case 'suma':
+      d1 = randDen()
+      d2 = d1
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 + n2
+      resD = d1
+      break
+
+    case 'resta':
+      d1 = randDen()
+      d2 = d1
+      n1 = randNum(d1)
+      n2 = rand(1, n1)
+
+      resN = n1 - n2
+      resD = d1
+      break
+
+    case 'multiplicacion':
+      d1 = randDen()
+      d2 = randDen()
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 * n2
+      resD = d1 * d2
+      break
+
+    case 'division':
+      d1 = randDen()
+      d2 = randDen()
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 * d2
+      resD = d1 * n2
+      break
+  }
+
+  ;[resN, resD] = simplificar(resN, resD)
+
+  const answer = `${resN}/${resD}`
+  const question = `${n1}/${d1} ${tipo === 'suma' ? '+' : tipo === 'resta' ? '−' : tipo === 'multiplicacion' ? '×' : '÷'} ${n2}/${d2}`
+
+  // Generar opciones falsas (fracciones)
+  const choices = new Set([answer])
+
+  while (choices.size < 4) {
+    const fakeN = resN + rand(-2, 2)
+    const fakeD = resD + rand(-2, 2)
+
+    if (fakeN > 0 && fakeD > 0) {
+      choices.add(`${fakeN}/${fakeD}`)
+    }
+  }
+
+  return {
+    question,
+    answer,
+    choices: [...choices].sort(() => Math.random() - 0.5),
+    op: tipo
+  }
+},
 }
 
 // Genera opciones de selección múltiple alrededor de la respuesta correcta
@@ -123,7 +209,9 @@ export function useMathQuestion(moduleId) {
   const generate = useCallback(() => {
     const gen = GENERATORS[moduleId] ?? GENERATORS.sumas
     const q = gen()
-    q.choices = generateChoices(q.answer)
+    if (!q.choices) {
+  q.choices = generateChoices(q.answer)
+}
     return q
   }, [moduleId])
 
