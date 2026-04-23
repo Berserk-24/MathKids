@@ -13,6 +13,8 @@ export default {
         teal:    { DEFAULT: '#00C9A7', light: '#33D4B8', dark: '#00A88C' },
         violet:  { DEFAULT: '#7C5CBF', light: '#9B7ED4', dark: '#634AA3' },
         sun:     { DEFAULT: '#FFD93D', light: '#FFE270', dark: '#F0C730' },
+        ocean:   { DEFAULT: '#0EA5E9', light: '#38BDF8', dark: '#0284C7' },
+        forest:  { DEFAULT: '#22C55E', light: '#4ADE80', dark: '#16A34A' },
         cream:   { DEFAULT: '#FFFBF0', dark: '#F5EFD8' },
         ink:     { DEFAULT: '#1E1B2E' },
       },

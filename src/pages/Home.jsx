@@ -16,7 +16,7 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div className="relative min-h-screen bg-cream overflow-hidden flex flex-col items-center justify-center px-4">
+    <div className="relative min-h-screen bg-blue-100 overflow-hidden flex flex-col items-center justify-center px-4">
 
       {/* Fondo decorativo con gradiente suave */}
       <div className="absolute inset-0 pointer-events-none">
@@ -86,6 +86,33 @@ export default function Home() {
           </SoundButton>
         </motion.div>
       </motion.div>
+
+      {/* Nubes decorativas en la parte inferior */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0">
+        <div className="flex justify-around items-end pb-8">
+          <motion.span
+            className="text-[144px] opacity-30"
+            animate={{ x: [0, 10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+          <motion.span
+            className="text-[256px] opacity-25"
+            animate={{ x: [0, -15, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+          <motion.span
+            className="text-[192px] opacity-35"
+            animate={{ x: [0, 20, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+        </div>
+      </div>
     </div>
   )
 }
