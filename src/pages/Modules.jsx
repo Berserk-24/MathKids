@@ -1,18 +1,29 @@
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { MODULES } from '../data/modules'
-import ModuleCard from '../components/ModuleCard'
-import SoundButton from '../components/SoundButton'
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { MODULES } from '../data/modules';
+import ModuleCard from '../components/ModuleCard';
+import SoundButton from '../components/SoundButton';
 
 export default function Modules() {
   const navigate = useNavigate()
+  // dificultadPorModulo: { [modId]: dificultad }
+  const [dificultadPorModulo, setDificultadPorModulo] = useState({})
 
   const handleSelectModule = (mod) => {
-    // Por ahora, navegar a la primera actividad del módulo
+    const dificultad = dificultadPorModulo[mod.id] || 1
     const firstActivity = mod.activities[0]
     if (firstActivity) {
-      navigate(`/activity/${mod.id}/${firstActivity.id}`)
+      navigate(`/activity/${mod.id}/${firstActivity.id}?dificultad=${dificultad}`)
     }
+  }
+
+  // Toggle dificultad para un módulo
+  const toggleDificultad = (modId) => {
+    setDificultadPorModulo(prev => ({
+      ...prev,
+      [modId]: prev[modId] === 2 ? 1 : 2
+    }))
   }
 
   return (
@@ -56,6 +67,8 @@ export default function Modules() {
               <ModuleCard
                 module={mod}
                 index={i}
+                dificultad={dificultadPorModulo[mod.id] || 1}
+                toggleDificultad={() => toggleDificultad(mod.id)}
               />
             </SoundButton>
           ))}
@@ -64,3 +77,4 @@ export default function Modules() {
     </div>
   )
 }
+

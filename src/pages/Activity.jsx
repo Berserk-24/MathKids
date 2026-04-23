@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getModule, getActivity } from '../data/modules'
 import { useMathQuestion }         from '../hooks/useMathQuestion'
@@ -82,15 +82,16 @@ function MultipleChoiceActivity({ question, onAnswer, moduleId }) {
     }, 600)
   }
 
-  // Estilos especiales solo para el módulo de problemas
+  // Estilos especiales para problemas y fracciones
   const isProblemas = moduleId === 'problemas'
-  const preguntaClass = isProblemas
-    ? 'font-display text-xl md:text-2xl text-ink tracking-tight'
+  const isFracciones = moduleId === 'fracciones'
+  const preguntaClass = (isProblemas || isFracciones)
+    ? 'font-display text-xl md:text-2xl text-ink tracking-tight whitespace-pre-line'
     : 'font-display text-7xl text-ink tracking-tight'
-  const cardClass = isProblemas
+  const cardClass = (isProblemas || isFracciones)
     ? 'card text-center py-12 px-8 w-full max-w-2xl'
     : 'card text-center py-10 px-16 w-full max-w-sm'
-  const gridClass = isProblemas
+  const gridClass = (isProblemas || isFracciones)
     ? 'grid grid-cols-2 gap-3 w-full max-w-xl'
     : 'grid grid-cols-2 gap-3 w-full max-w-sm'
 
@@ -170,10 +171,16 @@ export default function Activity() {
   const { moduleId, activityId } = useParams()
   const navigate = useNavigate()
 
+
   const mod      = getModule(moduleId)
   const activity = getActivity(moduleId, activityId)
 
-  const { question, next }            = useMathQuestion(moduleId)
+  // Leer dificultad de la query string
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const dificultad = parseInt(searchParams.get('dificultad')) || 1
+
+  const { question, next }            = useMathQuestion(moduleId, dificultad)
   const [score, setScore]             = useState(0)
   const [answered, setAnswered]       = useState(0)
   const [feedback, setFeedback]       = useState(null)  // 'correct' | 'incorrect' | null

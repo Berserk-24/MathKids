@@ -32,14 +32,14 @@ const colorMap = {
   },
 }
 
-export default function ModuleCard({ module, index }) {
+export default function ModuleCard({ module, index, dificultad, toggleDificultad }) {
   const c = colorMap[module.color] ?? colorMap.coral
 
   return (
     <motion.div
       className={`
         card w-full text-left cursor-pointer border-2 ${c.border}
-        transition-all duration-200 ${c.shadow}
+        transition-all duration-200 ${c.shadow} group
         hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-offset-2
       `}
       initial={{ opacity: 0, y: 20 }}
@@ -60,6 +60,26 @@ export default function ModuleCard({ module, index }) {
       <span className={`inline-block text-xs font-body font-700 px-3 py-1 rounded-full ${c.badge}`}>
         {module.activities.length} actividad{module.activities.length !== 1 ? 'es' : ''}
       </span>
+
+      {/* Botón para activar/desactivar modo difícil */}
+      <div className="flex justify-end mt-4">
+        <button
+          className={
+            dificultad === 2
+              ? "flame-btn"
+              : "flame-btn opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+          }
+          title={dificultad === 2 ? "Desactivar modo difícil" : "Activar modo difícil"}
+          onClick={e => {
+            e.stopPropagation();
+            toggleDificultad();
+          }}
+          style={dificultad === 2 ? { opacity: 1 } : {}}
+        >
+          <span className="flame-inner"></span>
+          {dificultad === 2 ? "Modo difícil activo" : "Modo difícil"}
+        </button>
+      </div>
     </motion.div>
   )
 }
