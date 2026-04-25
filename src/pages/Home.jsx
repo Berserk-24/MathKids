@@ -65,7 +65,7 @@ export default function Home() {
         {/* Estadísticas rápidas (placeholder) */}
         <div className="flex justify-center gap-6 mb-10">
           {[
-            { label: 'Módulos', value: '6' },
+            { label: 'Módulos', value: '5' },
             { label: 'Actividades', value: '8+' },
             { label: 'Diversión', value: '∞' },
           ].map(({ label, value }) => (
