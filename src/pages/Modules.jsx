@@ -114,21 +114,21 @@ export default function Modules() {
       <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0">
         <div className="flex justify-around items-end pb-8">
           <motion.span
-            className="text-[144px] opacity-30"
+            className="text-[144px] opacity-130"
             animate={{ x: [0, 10, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           >
             ☁️
           </motion.span>
           <motion.span
-            className="text-[256px] opacity-25"
+            className="text-[256px] opacity-125"
             animate={{ x: [0, -15, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
             ☁️
           </motion.span>
           <motion.span
-            className="text-[192px] opacity-35"
+            className="text-[192px] opacity-135"
             animate={{ x: [0, 20, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
