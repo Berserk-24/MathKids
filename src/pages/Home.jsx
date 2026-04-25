@@ -92,21 +92,21 @@ export default function Home() {
         <div className="flex justify-around items-end pb-8">
           <motion.span
             className="text-[144px] opacity-150"
-            animate={{ x: [0, 15, 0] }}
+            animate={{ x: [0, 115, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           >
             ☁️
           </motion.span>
           <motion.span
             className="text-[256px] opacity-125"
-            animate={{ x: [0, -10, 0] }}
+            animate={{ x: [0, -70, 0] }}
             transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
           >
             ☁️
           </motion.span>
           <motion.span
             className="text-[92px] opacity-135"
-            animate={{ x: [0, 28, 0] }}
+            animate={{ x: [0, 128, 0] }}
             transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
           >
             ☁️
