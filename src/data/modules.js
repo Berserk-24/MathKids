@@ -80,12 +80,12 @@ export const MODULES = [
   {
     id: 'problemas',
     title: 'Problemas Matematicos',
-    emoji: '🔢',
+    emoji: '🧠',
     description: 'Entiende las Matematicas con Problemas mas Elaborados.',
-    color: 'sun',
-    bgClass: 'bg-sun',
-    shadowClass: 'shadow-[0_4px_0_#F0C730]',
-    borderClass: 'border-sun',
+    color: 'ocean',
+    bgClass: 'bg-ocean',
+    shadowClass: 'shadow-[0_4px_0_#0284C7]',
+    borderClass: 'border-ocean',
     activities: [
       {
         id: 'problemas-matematicos',
@@ -100,10 +100,10 @@ export const MODULES = [
     title: 'Fracciones',
     emoji: '🔢',
     description: 'Aprende de fracciones y sus operaciones.',
-    color: 'sun',
-    bgClass: 'bg-sun',
-    shadowClass: 'shadow-[0_4px_0_#F0C730]',
-    borderClass: 'border-sun',
+    color: 'forest',
+    bgClass: 'bg-forest',
+    shadowClass: 'shadow-[0_4px_0_#16A34A]',
+    borderClass: 'border-forest',
     activities: [
       {
         id: 'fracciones-sencillas',

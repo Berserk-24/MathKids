@@ -6,6 +6,45 @@ import { useMathQuestion }         from '../hooks/useMathQuestion'
 import FeedbackOverlay             from '../components/FeedbackOverlay'
 import ScoreBar                    from '../components/ScoreBar'
 
+// Mapa de colores por módulo
+const moduleColors = {
+  sumas: '#FF6B35',
+  restas: '#FF6B35',
+  multiplicacion: '#7C5CBF',
+  division: '#FFD93D',
+  problemas: '#0EA5E9',
+  fracciones: '#22C55E',
+}
+
+// Figuras decorativas por módulo
+const getShapes = (moduleId) => {
+  const baseShapes = [
+    { top: '10%', left: '15%',  size: 'text-8xl', delay: -10 },
+    { top: '20%', right: '15%', size: 'text-7xl', delay: 0.5 },
+    { bottom: '25%', left: '18%', size: 'text-7xl', delay: 1 },
+    { top: '60%', right: '14%', size: 'text-8xl', delay: 0.3 },
+    { top: '40%', left: '12%', size: 'text-6xl', delay: 0.8 },
+    { bottom: '12%', right: '18%', size: 'text-7xl', delay: 0.2 },
+  ]
+
+  switch (moduleId) {
+    case 'sumas':
+      return baseShapes.map(s => ({ ...s, emoji: ['➕', '1', '2', '3', '+'][Math.floor(Math.random() * 5)] }))
+    case 'restas':
+      return baseShapes.map(s => ({ ...s, emoji: ['➖', '4', '5', '6', '-'][Math.floor(Math.random() * 5)] }))
+    case 'multiplicacion':
+      return baseShapes.map(s => ({ ...s, emoji: ['✖️', '×', '7', '8', '9'][Math.floor(Math.random() * 5)] }))
+    case 'division':
+      return baseShapes.map(s => ({ ...s, emoji: ['➗', '÷', '10', '2', '5'][Math.floor(Math.random() * 5)] }))
+    case 'problemas':
+      return baseShapes.map(s => ({ ...s, emoji: ['🔢', '📚', '🧠', '💡', '?'][Math.floor(Math.random() * 5)] }))
+    case 'fracciones':
+      return baseShapes.map(s => ({ ...s, emoji: ['🔷', '△', '⬜', '1/2', '🍕'][Math.floor(Math.random() * 5)] }))
+    default:
+      return baseShapes.map(s => ({ ...s, emoji: '⭐' }))
+  }
+}
+
 // ─── Actividad: Respuesta Directa ────────────────────────────────────────────
 function DirectAnswerActivity({ question, onAnswer, moduleId }) {
   const [input, setInput] = useState('')
@@ -19,29 +58,30 @@ function DirectAnswerActivity({ question, onAnswer, moduleId }) {
   // Estilos especiales solo para el módulo de problemas
   const isProblemas = moduleId === 'problemas'
   const preguntaClass = isProblemas
-    ? 'font-display text-xl md:text-2xl text-ink tracking-tight'
-    : 'font-display text-3xl text-ink tracking-tight'
+    ? 'font-display text-2xl md:text-3xl text-ink tracking-tight font-bold'
+    : 'font-display text-4xl md:text-5xl text-ink tracking-tight font-bold'
   const cardClass = isProblemas
     ? 'card text-center py-12 px-8 w-full max-w-2xl'
     : 'card text-center py-10 px-16 w-full max-w-sm'
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center justify-center gap-10 min-h-[60vh]">
       {/* Pregunta */}
       <motion.div
         key={question.question}
         className={cardClass}
+        style={{ borderColor: moduleColors[moduleId], borderWidth: '2px' }}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <p className={preguntaClass}>
-          {question.question} <span className="text-coral">=</span> ?
+          {question.question} <span style={{ color: moduleColors[moduleId] }}>=</span> ?
         </p>
       </motion.div>
 
-      {/* Input numérico */}
-      <div className="flex gap-3 items-center">
+      {/* Input y botón - Vertical */}
+      <div className="flex flex-col gap-6 items-center w-full max-w-xs">
         <input
           type="number"
           value={input}
@@ -49,14 +89,23 @@ function DirectAnswerActivity({ question, onAnswer, moduleId }) {
           onKeyDown={(e) => e.key === 'Enter' && submit()}
           placeholder="?"
           className="
-            w-28 h-16 text-center font-display text-4xl text-ink
-            border-2 border-cream-dark rounded-2xl bg-white
-            focus:outline-none focus:border-coral transition-colors
+            w-full h-24 text-center font-display text-6xl text-ink
+            border-2 rounded-3xl bg-white
+            focus:outline-none transition-all duration-200
           "
+          style={{
+            borderColor: moduleColors[moduleId],
+            borderWidth: '3px'
+          }}
           autoFocus
         />
         <motion.button
-          className="btn-primary"
+          className="w-full h-20 font-display text-4xl rounded-3xl border-3 font-bold"
+          style={{
+            borderColor: moduleColors[moduleId],
+            backgroundColor: moduleColors[moduleId],
+            color: 'white'
+          }}
           whileTap={{ scale: 0.95 }}
           onClick={submit}
         >
@@ -96,16 +145,17 @@ function MultipleChoiceActivity({ question, onAnswer, moduleId }) {
     : 'grid grid-cols-2 gap-3 w-full max-w-sm'
 
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center justify-center gap-10 min-h-[60vh]">
       <motion.div
         key={question.question}
         className={cardClass}
+        style={{ borderColor: moduleColors[moduleId], borderWidth: '2px' }}
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <p className={preguntaClass}>
-          {question.question} <span className="text-coral">=</span> ?
+          {question.question} <span style={{ color: moduleColors[moduleId] }}>=</span> ?
         </p>
       </motion.div>
 
@@ -113,18 +163,27 @@ function MultipleChoiceActivity({ question, onAnswer, moduleId }) {
         {question.choices.map((choice) => {
           const isCorrect  = choice === question.answer
           const isSelected = choice === selected
-          let style = 'border-cream-dark bg-white text-ink hover:border-coral hover:text-coral'
+          
+          let borderColor = moduleColors[moduleId]
+          let bgColor = 'white'
+          let textColor = 'ink'
+          let hoverBorder = moduleColors[moduleId]
 
           if (isSelected) {
-            style = isCorrect
-              ? 'border-teal bg-teal text-white'
-              : 'border-coral bg-coral/10 text-coral'
+            bgColor = isCorrect ? moduleColors[moduleId] : moduleColors[moduleId] + '20'
+            textColor = isCorrect ? 'white' : moduleColors[moduleId]
+            borderColor = moduleColors[moduleId]
           }
 
           return (
             <motion.button
               key={choice}
-              className={`font-display text-3xl py-5 rounded-3xl border-2 transition-all duration-200 ${style}`}
+              className={`font-display text-3xl py-5 rounded-3xl border-2 transition-all duration-200`}
+              style={{
+                borderColor: borderColor,
+                backgroundColor: bgColor,
+                color: isSelected && !isCorrect ? moduleColors[moduleId] : (isSelected ? textColor : 'black')
+              }}
               whileHover={{ scale: selected === null ? 1.03 : 1 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => choose(choice)}
@@ -233,16 +292,39 @@ export default function Activity() {
     )
   }
 
+  const shapes = getShapes(moduleId)
+
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="relative min-h-screen bg-blue-100 overflow-hidden">
+      {/* Fondo decorativo con gradiente suave */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-0 w-72 h-72 bg-blue-200/20 rounded-full -translate-x-1/2 -translate-y-1/2" />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-teal/10 rounded-full translate-x-1/4 translate-y-1/4" />
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-yellow-200/20 rounded-full -translate-x-1/2 -translate-y-1/2" />
+      </div>
+
+      {/* Emojis flotantes */}
+      {shapes.map((s, i) => (
+        <motion.span
+          key={i}
+          className={`absolute ${s.size} select-none pointer-events-none opacity-30`}
+          style={{ top: s.top, left: s.left, right: s.right, bottom: s.bottom }}
+          animate={{opacity: [0.5, 1, 0.5], y: [0, -15, 0] }}
+          transition={{ duration: 3, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          {s.emoji}
+        </motion.span>
+      ))}
+
       {/* Header */}
-      <header className="sticky top-0 z-20 bg-cream/80 backdrop-blur-sm border-b-2 border-cream-dark">
+      <header className="relative z-10 sticky top-0 bg-[#EDE9FE]/90 backdrop-blur-sm border-b-2 border-[#C4B5FD]">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-center gap-3">
           <button
             onClick={() => navigate('/modules')}
-            className="text-2xl hover:scale-110 transition-transform"
+            className="text-3xl hover:scale-110 transition-transform"
+            aria-label="Volver a módulos"
           >
-            ←
+            🌀
           </button>
           <span className="text-2xl">{mod.emoji}</span>
           <h1 className="font-display text-2xl text-ink">{activity.title}</h1>
@@ -252,7 +334,7 @@ export default function Activity() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-2xl mx-auto px-4 py-8">
         {done ? (
           <ResultsScreen
             score={score}
@@ -262,7 +344,7 @@ export default function Activity() {
           />
         ) : (
           <>
-            <ScoreBar score={score} total={answered} streak={streak} />
+            <ScoreBar score={score} total={answered} streak={streak} moduleId={mod.id} />
 
             {/* Actividad según tipo */}
             {activity.type === 'direct-answer' && (
@@ -277,6 +359,33 @@ export default function Activity() {
           </>
         )}
       </main>
+
+      {/* Nubes decorativas en la parte inferior */}
+      <div className="absolute bottom-0 left-0 right-0 pointer-events-none z-0">
+        <div className="flex justify-around items-end pb-8">
+          <motion.span
+            className="text-[144px] opacity-30"
+            animate={{ x: [0, 10, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+          <motion.span
+            className="text-[256px] opacity-25"
+            animate={{ x: [0, -15, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+          <motion.span
+            className="text-[192px] opacity-35"
+            animate={{ x: [0, 20, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            ☁️
+          </motion.span>
+        </div>
+      </div>
     </div>
   )
 }

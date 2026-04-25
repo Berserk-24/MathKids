@@ -2,16 +2,16 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 const FEEDBACK = {
   correct: {
-    emoji: '🎉',
+    emoji: '⭐',
     messages: ['¡Correcto!', '¡Genial!', '¡Excelente!', '¡Muy bien!', '¡Eso es!'],
-    bg: 'bg-teal',
+    bg: 'bg-yellow-400',
     text: 'text-white',
   },
   incorrect: {
-    emoji: '🤔',
+    emoji: '🔄',
     messages: ['¡Casi!', 'Inténtalo de nuevo', 'No te rindas', '¡Sigue intentando!'],
-    bg: 'bg-coral/20',
-    text: 'text-coral',
+    bg: 'bg-orange-200',
+    text: 'text-orange-800',
   },
 }
 

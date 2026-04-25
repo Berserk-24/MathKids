@@ -6,6 +6,8 @@ const colorMap = {
     bg:     'bg-coral',
     text:   'text-coral',
     border: 'border-coral',
+    borderHex: '#FF6B35',
+    ring:   'ring-coral/30',
     shadow: 'hover:shadow-[0_6px_0_#E05A28]',
     badge:  'bg-coral/10 text-coral',
   },
@@ -13,6 +15,8 @@ const colorMap = {
     bg:     'bg-teal',
     text:   'text-teal',
     border: 'border-teal',
+    borderHex: '#00C9A7',
+    ring:   'ring-teal/30',
     shadow: 'hover:shadow-[0_6px_0_#00A88C]',
     badge:  'bg-teal/10 text-teal',
   },
@@ -20,6 +24,8 @@ const colorMap = {
     bg:     'bg-violet',
     text:   'text-violet',
     border: 'border-violet',
+    borderHex: '#7C5CBF',
+    ring:   'ring-violet/30',
     shadow: 'hover:shadow-[0_6px_0_#634AA3]',
     badge:  'bg-violet/10 text-violet',
   },
@@ -27,8 +33,28 @@ const colorMap = {
     bg:     'bg-sun',
     text:   'text-sun-dark',
     border: 'border-sun',
+    borderHex: '#FFD93D',
+    ring:   'ring-sun/30',
     shadow: 'hover:shadow-[0_6px_0_#F0C730]',
     badge:  'bg-sun/20 text-sun-dark',
+  },
+  ocean:  {
+    bg:     'bg-ocean',
+    text:   'text-ocean',
+    border: 'border-ocean',
+    borderHex: '#0EA5E9',
+    ring:   'ring-ocean/30',
+    shadow: 'hover:shadow-[0_6px_0_#0284C7]',
+    badge:  'bg-ocean/10 text-ocean',
+  },
+  forest: {
+    bg:     'bg-forest',
+    text:   'text-forest',
+    border: 'border-forest',
+    borderHex: '#22C55E',
+    ring:   'ring-forest/30',
+    shadow: 'hover:shadow-[0_6px_0_#16A34A]',
+    badge:  'bg-forest/10 text-forest',
   },
 }
 
@@ -38,17 +64,21 @@ export default function ModuleCard({ module, index, dificultad, toggleDificultad
   return (
     <motion.div
       className={`
-        card w-full text-left cursor-pointer border-2 ${c.border}
+        card w-full text-left cursor-pointer !border-4 ${c.border} !ring-4 ${c.ring} ring-offset-2 ring-offset-blue-100
         transition-all duration-200 ${c.shadow} group
         hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-offset-2
       `}
+      style={{ borderColor: c.borderHex }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1, duration: 0.4 }}
       aria-label={`Ir al módulo ${module.title}`}
     >
       {/* Icono del módulo */}
-      <div className={`w-14 h-14 rounded-2xl ${c.bg} flex items-center justify-center text-3xl mb-4 shadow-sm`}>
+      <div
+        className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm"
+        style={{ backgroundColor: c.borderHex }}
+      >
         {module.emoji}
       </div>
 
