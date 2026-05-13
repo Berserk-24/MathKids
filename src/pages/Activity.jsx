@@ -253,7 +253,7 @@ export default function Activity() {
       setFeedback(null)
       if (answered < TOTAL_QUESTIONS) next()
       else setDone(true)
-    }, 900)
+    }, 2000)
     return () => clearTimeout(t)
   }, [feedback])
 
