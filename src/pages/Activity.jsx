@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { useNavigate, useParams, useLocation, useSearchParams } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getModule, getActivity } from '../data/modules'
 import { useMathQuestion }         from '../hooks/useMathQuestion'
 import FeedbackOverlay             from '../components/FeedbackOverlay'
@@ -197,7 +197,7 @@ function MultipleChoiceActivity({ question, onAnswer, moduleId }) {
   )
 }
 
-// ─── Pantalla de resultados ───────────────────────────────────────────────────
+// ─── Pantalla de resultados estándar ─────────────────────────────────────────
 function ResultsScreen({ score, total, onRetry, onBack }) {
   const pct = Math.round((score / total) * 100)
   const grade = pct >= 80 ? '🏆' : pct >= 50 ? '⭐' : '📚'
@@ -223,32 +223,196 @@ function ResultsScreen({ score, total, onRetry, onBack }) {
   )
 }
 
+// ─── Resultados del modo Rapidez ─────────────────────────────────────────────
+function SpeedResults({ score, total, duration, onRetry, onBack }) {
+  const pct      = total > 0 ? Math.round((score / total) * 100) : 0
+  const grade    = pct >= 80 ? '🏆' : pct >= 50 ? '⭐' : '📚'
+  const perMin   = duration === '30s' ? score * 2 : null
+
+  return (
+    <motion.div
+      className="flex flex-col items-center gap-6 text-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+    >
+      <span className="text-7xl">{grade}</span>
+      <h2 className="font-display text-4xl text-ink">¡Tiempo! ⏱️</h2>
+
+      <div className="card py-6 px-10 w-full max-w-sm">
+        <p className="font-body text-ink/50 mb-1">Correctas en {duration}</p>
+        <p className="font-display text-6xl text-teal">
+          {score}
+          <span className="text-2xl text-ink/30">/{total}</span>
+        </p>
+        <p className="font-body text-lg text-ink/60 mt-1">{pct}% de precisión</p>
+        {perMin && (
+          <p className="font-body text-sm text-ink/40 mt-2">≈ {perMin} correctas por minuto</p>
+        )}
+      </div>
+
+      <div className="flex gap-3">
+        <button className="btn-secondary" onClick={onRetry}>Repetir 🔄</button>
+        <button className="btn-ghost"     onClick={onBack}>Módulos</button>
+      </div>
+    </motion.div>
+  )
+}
+
+// ─── Actividad: Rapidez ──────────────────────────────────────────────────────
+const TIME_LABELS = { 30: '30s', 60: '1m', 120: '2m', 180: '3m', 300: '5m' }
+
+function SpeedActivity({ moduleId, totalSeconds, dificultad }) {
+  const navigate              = useNavigate()
+  const { question, next }    = useMathQuestion(moduleId, dificultad)
+  const [score,  setScore]    = useState(0)
+  const [total,  setTotal]    = useState(0)
+  const [timeLeft, setTimeLeft] = useState(totalSeconds)
+  const [done,   setDone]     = useState(false)
+  const [feedback, setFeedback] = useState(null)
+  const intervalRef           = useRef(null)
+
+  // Temporizador
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          clearInterval(intervalRef.current)
+          setDone(true)
+          return 0
+        }
+        return t - 1
+      })
+    }, 1000)
+    return () => clearInterval(intervalRef.current)
+  }, [])
+
+  // Limpiar feedback rápido y pasar a siguiente pregunta
+  useEffect(() => {
+    if (!feedback) return
+    const t = setTimeout(() => {
+      setFeedback(null)
+      next()
+    }, 400)
+    return () => clearTimeout(t)
+  }, [feedback])
+
+  const handleAnswer = useCallback((isCorrect) => {
+    setTotal((t) => t + 1)
+    if (isCorrect) setScore((s) => s + 1)
+    setFeedback(isCorrect ? 'correct' : 'incorrect')
+  }, [])
+
+  // Formato mm:ss
+  const mins = Math.floor(timeLeft / 60)
+  const secs = timeLeft % 60
+  const timeDisplay = mins > 0
+    ? `${mins}:${String(secs).padStart(2, '0')}`
+    : `${secs}s`
+
+  // Color del temporizador según urgencia
+  const timerColor = timeLeft <= 10
+    ? 'text-coral'
+    : timeLeft <= 30
+    ? 'text-sun-dark'
+    : 'text-teal'
+
+  // Porcentaje para la barra del timer
+  const timerPct = (timeLeft / totalSeconds) * 100
+
+  if (done) return (
+    <SpeedResults
+      score={score}
+      total={total}
+      duration={TIME_LABELS[totalSeconds] ?? `${totalSeconds}s`}
+      onRetry={() => navigate(0)}
+      onBack={() => navigate('/modules')}
+    />
+  )
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Barra de tiempo */}
+      <div className="card py-3 px-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="font-body text-sm text-ink/40">Tiempo restante</span>
+          <motion.span
+            key={timeLeft}
+            className={`font-display text-3xl ${timerColor}`}
+            animate={timeLeft <= 10 ? { scale: [1, 1.15, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            {timeDisplay}
+          </motion.span>
+        </div>
+        <div className="w-full h-3 bg-cream-dark rounded-full overflow-hidden">
+          <motion.div
+            className={`h-full rounded-full transition-colors duration-1000 ${
+              timeLeft <= 10 ? 'bg-coral' : timeLeft <= 30 ? 'bg-sun' : 'bg-teal'
+            }`}
+            animate={{ width: `${timerPct}%` }}
+            transition={{ duration: 1, ease: 'linear' }}
+          />
+        </div>
+      </div>
+
+      {/* Marcador rápido */}
+      <div className="flex gap-3">
+        <div className="card flex-1 text-center py-2">
+          <div className="font-display text-2xl text-teal">{score}</div>
+          <div className="font-body text-xs text-ink/40">correctas</div>
+        </div>
+        <div className="card flex-1 text-center py-2">
+          <div className="font-display text-2xl text-ink">{total}</div>
+          <div className="font-body text-xs text-ink/40">respondidas</div>
+        </div>
+        <div className="card flex-1 text-center py-2">
+          <div className="font-display text-2xl text-coral">{total - score}</div>
+          <div className="font-body text-xs text-ink/40">incorrectas</div>
+        </div>
+      </div>
+
+      {/* Pregunta — siempre selección múltiple en modo rapidez */}
+      <MultipleChoiceActivity
+        question={question}
+        onAnswer={handleAnswer}
+        moduleId={moduleId}
+        disabled={!!feedback}
+      />
+
+      <FeedbackOverlay type={feedback} visible={!!feedback} />
+    </div>
+  )
+}
+
 // ─── Activity (orquestador) ───────────────────────────────────────────────────
 const TOTAL_QUESTIONS = 10
 
 export default function Activity() {
   const { moduleId, activityId } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
 
+  // Detectar modo rapidez por la ruta
+  const isSpeed = location.pathname.includes('/speed')
+  const totalSeconds = isSpeed ? Number(searchParams.get('t') ?? 60) : null
 
   const mod      = getModule(moduleId)
-  const activity = getActivity(moduleId, activityId)
+  const activity = !isSpeed ? getActivity(moduleId, activityId) : null
 
-  // Leer dificultad de la query string
-  const location = useLocation()
-  const searchParams = new URLSearchParams(location.search)
+  // Leer dificultad de la query string (usar siempre el query param)
   const dificultad = parseInt(searchParams.get('dificultad')) || 1
 
-  const { question, next }            = useMathQuestion(moduleId, dificultad)
-  const [score, setScore]             = useState(0)
-  const [answered, setAnswered]       = useState(0)
-  const [feedback, setFeedback]       = useState(null)  // 'correct' | 'incorrect' | null
-  const [streak, setStreak]           = useState(0)
-  const [done, setDone]               = useState(false)
+  const { question, next } = useMathQuestion(moduleId, dificultad)
+  const [score, setScore] = useState(0)
+  const [answered, setAnswered] = useState(0)
+  const [feedback, setFeedback] = useState(null)  // 'correct' | 'incorrect' | null
+  const [streak, setStreak] = useState(0)
+  const [done, setDone] = useState(false)
 
-  // Limpiar feedback después de un momento
+  // Limpiar feedback después de un momento (solo estándar)
   useEffect(() => {
-    if (!feedback) return
+    if (!feedback || isSpeed) return
     const t = setTimeout(() => {
       setFeedback(null)
       if (answered < TOTAL_QUESTIONS) next()
@@ -284,7 +448,7 @@ export default function Activity() {
     next()
   }
 
-  if (!mod || !activity) {
+  if (!mod || (!activity && !isSpeed)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="font-display text-2xl text-coral">Módulo no encontrado 😕</p>
@@ -323,41 +487,50 @@ export default function Activity() {
             onClick={() => navigate('/modules')}
             className="text-3xl hover:scale-110 transition-transform"
             aria-label="Volver a módulos"
-            /*style={{ transform: 'rotate(180deg)' }}*/
           >
             ⬅
           </button>
           <span className="text-2xl">{mod.emoji}</span>
-          <h1 className="font-display text-2xl text-ink">{activity.title}</h1>
-          <span className="ml-auto font-body text-sm text-ink/40">
-            {answered}/{TOTAL_QUESTIONS}
-          </span>
+          <h1 className="font-display text-2xl text-ink">{activity ? activity.title : mod.title + ' · ⚡ Rapidez'}</h1>
+          {!isSpeed && (
+            <span className="ml-auto font-body text-sm text-ink/40">
+              {answered}/{TOTAL_QUESTIONS}
+            </span>
+          )}
         </div>
       </header>
 
       <main className="relative z-10 max-w-2xl mx-auto px-4 py-8">
-        {done ? (
-          <ResultsScreen
-            score={score}
-            total={TOTAL_QUESTIONS}
-            onRetry={handleRetry}
-            onBack={() => navigate('/modules')}
-          />
-        ) : (
-          <>
-            <ScoreBar score={score} total={answered} streak={streak} moduleId={mod.id} />
+        {/* Modo Rapidez */}
+        {isSpeed && (
+          <SpeedActivity moduleId={moduleId} totalSeconds={totalSeconds} dificultad={dificultad} />
+        )}
 
-            {/* Actividad según tipo */}
-            {activity.type === 'direct-answer' && (
-              <DirectAnswerActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
-            )}
-            {activity.type === 'multiple-choice' && (
-              <MultipleChoiceActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
-            )}
+        {/* Modo Estándar */}
+        {!isSpeed && (
+          done ? (
+            <ResultsScreen
+              score={score}
+              total={TOTAL_QUESTIONS}
+              onRetry={handleRetry}
+              onBack={() => navigate('/modules')}
+            />
+          ) : (
+            <>
+              <ScoreBar score={score} total={answered} streak={streak} moduleId={mod.id} />
 
-            {/* Feedback */}
-            <FeedbackOverlay type={feedback} visible={!!feedback} />
-          </>
+              {/* Actividad según tipo */}
+              {activity.type === 'direct-answer' && (
+                <DirectAnswerActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
+              )}
+              {activity.type === 'multiple-choice' && (
+                <MultipleChoiceActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
+              )}
+
+              {/* Feedback */}
+              <FeedbackOverlay type={feedback} visible={!!feedback} />
+            </>
+          )
         )}
       </main>
 

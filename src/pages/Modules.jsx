@@ -21,11 +21,8 @@ export default function Modules() {
   const [dificultadPorModulo, setDificultadPorModulo] = useState({})
 
   const handleSelectModule = (mod) => {
-    const dificultad = dificultadPorModulo[mod.id] || 1
-    const firstActivity = mod.activities[0]
-    if (firstActivity) {
-      navigate(`/activity/${mod.id}/${firstActivity.id}?dificultad=${dificultad}`)
-    }
+    const dificultad = dificultadPorModulo[mod.id] || 1;
+    navigate(`/activity/${mod.id}?dificultad=${dificultad}`);
   }
 
   // Toggle dificultad para un módulo

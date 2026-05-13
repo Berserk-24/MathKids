@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import Home      from './pages/Home'
 import Modules   from './pages/Modules'
 import Activity  from './pages/Activity'
+import ActivitySelector from './pages/ActivitySelector'
 import NotFound  from './pages/NotFound'
 import menuTheme from './assets/menu-modulesTheme.mp3'
 
@@ -37,6 +38,15 @@ export default function App() {
 
         {/* Selector de módulos */}
         <Route path="/modules"                  element={<Modules />} />
+
+         {/* Selector de modo: estándar o rapidez */}
+        <Route path="/activity/:moduleId"            element={<ActivitySelector />} />
+
+        {/* Actividad estándar */}
+        <Route path="/activity/:moduleId/standard"   element={<Activity />} />
+
+        {/* Actividad de rapidez — el tiempo viene como query param ?t=30 */}
+        <Route path="/activity/:moduleId/speed"      element={<Activity />} />
 
         {/* Actividad dinámica: /activity/:moduleId/:activityId */}
         <Route path="/activity/:moduleId/:activityId" element={<Activity />} />

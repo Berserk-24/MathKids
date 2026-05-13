@@ -18,7 +18,13 @@ export const MODULES = [
       {
         id: 'suma-basica',
         title: 'Suma básica',
-        type: 'direct-answer',   // tipos: 'direct-answer' | 'multiple-choice' | 'drag-drop' | 'speed'
+        type: 'direct-answer',
+        difficulty: 1,
+      },
+      {
+        id: 'suma-rapida',
+        title: 'Suma rápida',
+        type: 'speed',
         difficulty: 1,
       },
     ],
@@ -39,6 +45,12 @@ export const MODULES = [
         type: 'direct-answer',
         difficulty: 1,
       },
+      {
+        id: 'resta-rapida',
+        title: 'Resta rápida',
+        type: 'speed',
+        difficulty: 1,
+      },
     ],
   },
   {
@@ -55,6 +67,12 @@ export const MODULES = [
         id: 'tablas',
         title: 'Tablas de multiplicar',
         type: 'multiple-choice',
+        difficulty: 2,
+      },
+      {
+        id: 'tablas-rapida',
+        title: 'Tablas rápidas',
+        type: 'speed',
         difficulty: 2,
       },
     ],
@@ -75,6 +93,12 @@ export const MODULES = [
         type: 'multiple-choice',
         difficulty: 2,
       },
+      {
+        id: 'division-rapida',
+        title: 'División rápida',
+        type: 'speed',
+        difficulty: 2,
+      },
     ],
   },
   {
@@ -93,6 +117,12 @@ export const MODULES = [
         type: 'multiple-choice',
         difficulty: 2,
       },
+      {
+        id: 'problemas-rapida',
+        title: 'Problemas rápidos',
+        type: 'speed',
+        difficulty: 2,
+      },
     ],  
   },
   {
@@ -109,6 +139,12 @@ export const MODULES = [
         id: 'fracciones-sencillas',
         title: 'Resolvamos fracciones',
         type: 'multiple-choice',
+        difficulty: 2,
+      },
+      {
+        id: 'fracciones-rapida',
+        title: 'Fracciones rápidas',
+        type: 'speed',
         difficulty: 2,
       },
     ],  
