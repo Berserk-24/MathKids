@@ -33,7 +33,7 @@ export default function ScoreBar({ score, total, streak, moduleId = 'sumas' }) {
         <div className="w-full h-3 bg-cream-dark rounded-full overflow-hidden">
           <motion.div
             className="h-full rounded-full"
-            style={{ backgroundColor: moduleColor }}
+            style={{ backgroundColor:'#22C55E'}}
             initial={{ width: 0 }}
             animate={{ width: `${pct}%` }}
             transition={{ duration: 0.5, ease: 'easeOut' }}
