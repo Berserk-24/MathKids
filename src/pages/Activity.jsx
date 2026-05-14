@@ -5,6 +5,7 @@ import { getModule, getActivity } from '../data/modules'
 import { useMathQuestion }         from '../hooks/useMathQuestion'
 import FeedbackOverlay             from '../components/FeedbackOverlay'
 import ScoreBar                    from '../components/ScoreBar'
+import TipPanel from '../components/TipPanel'
 
 // Mapa de colores por módulo
 const moduleColors = {
@@ -387,6 +388,7 @@ function SpeedActivity({ moduleId, totalSeconds, dificultad }) {
 // ─── Activity (orquestador) ───────────────────────────────────────────────────
 const TOTAL_QUESTIONS = 10
 
+
 export default function Activity() {
   const { moduleId, activityId } = useParams()
   const navigate = useNavigate()
@@ -409,6 +411,8 @@ export default function Activity() {
   const [feedback, setFeedback] = useState(null)  // 'correct' | 'incorrect' | null
   const [streak, setStreak] = useState(0)
   const [done, setDone] = useState(false)
+  // Estado para el panel de tips
+  const [tipOpen, setTipOpen] = useState(false)
 
   // Limpiar feedback después de un momento (solo estándar)
   useEffect(() => {
@@ -500,13 +504,13 @@ export default function Activity() {
         </div>
       </header>
 
-      <main className="relative z-10 max-w-2xl mx-auto px-4 py-8">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 py-8">
         {/* Modo Rapidez */}
         {isSpeed && (
           <SpeedActivity moduleId={moduleId} totalSeconds={totalSeconds} dificultad={dificultad} />
         )}
 
-        {/* Modo Estándar */}
+        {/* Modo Estándar con panel de tips */}
         {!isSpeed && (
           done ? (
             <ResultsScreen
@@ -516,20 +520,47 @@ export default function Activity() {
               onBack={() => navigate('/modules')}
             />
           ) : (
-            <>
-              <ScoreBar score={score} total={answered} streak={streak} moduleId={mod.id} />
+            // ── Contenedor flex: actividad a la izquierda, panel a la derecha ──
+            <div className="flex gap-4 items-start">
 
-              {/* Actividad según tipo */}
-              {activity.type === 'direct-answer' && (
-                <DirectAnswerActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
-              )}
-              {activity.type === 'multiple-choice' && (
-                <MultipleChoiceActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
-              )}
+              {/* Actividad — se encoge cuando el panel está abierto */}
+              <div className="flex-1 flex flex-col gap-4 min-w-0">
+                <ScoreBar score={score} total={answered} streak={streak} moduleId={mod.id} />
 
-              {/* Feedback */}
-              <FeedbackOverlay type={feedback} visible={!!feedback} />
-            </>
+                {/* Botón Tip */}
+                <div className="flex justify-end">
+                  <motion.button
+                    className={`
+                      flex items-center gap-2 px-4 py-2 rounded-2xl border-2 font-display text-lg
+                      transition-all duration-200
+                      ${tipOpen
+                        ? 'bg-sun border-sun-dark text-ink'
+                        : 'bg-white border-cream-dark text-ink/60 hover:border-sun hover:text-ink'}
+                    `}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setTipOpen(!tipOpen)}
+                  >
+                    💡 Tip
+                  </motion.button>
+                </div>
+
+                {activity?.type === 'direct-answer' && (
+                  <DirectAnswerActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
+                )}
+                {activity?.type === 'multiple-choice' && (
+                  <MultipleChoiceActivity question={question} onAnswer={handleAnswer} moduleId={mod.id} />
+                )}
+
+                <FeedbackOverlay type={feedback} visible={!!feedback} />
+              </div>
+
+              {/* Panel lateral del video — solo desktop, en móvil es drawer */}
+              <TipPanel
+                moduleId={moduleId}
+                open={tipOpen}
+                onClose={() => setTipOpen(false)}
+              />
+            </div>
           )
         )}
       </main>
