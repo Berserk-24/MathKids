@@ -7,6 +7,19 @@ import ActivitySelector from './pages/ActivitySelector'
 import NotFound  from './pages/NotFound'
 import menuTheme from './assets/menu-modulesTheme.mp3'
 
+// Componente para enviar pageview a Google Analytics en cada cambio de ruta
+function GoogleAnalytics() {
+  const location = useLocation();
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-EZZWE9568F', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+  return null;
+}
+
 function MusicPlayer() {
   const location = useLocation();
   const audioRef = useRef(null);
@@ -31,6 +44,7 @@ function MusicPlayer() {
 export default function App() {
   return (
     <BrowserRouter>
+      <GoogleAnalytics />
       <MusicPlayer />
       <Routes>
         {/* Pantalla de bienvenida */}
