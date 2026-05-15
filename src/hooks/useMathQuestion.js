@@ -137,119 +137,202 @@ const GENERATORS = {
 
     return { question, answer, a, b, op: tipo }
   },
-  fracciones: (difficulty = 1) => {
+fracciones: (difficulty = 1) => {
 
-    let denominadores, numRange
-    if (difficulty === 1) {
-      denominadores = [2, 3, 4, 5]
-      numRange = [1, 5]
-    } else if (difficulty === 2) {
-      denominadores = [6, 7, 8, 9, 10, 11, 12]
-      numRange = [3, 20]
-    }
+  let denominadores, numRange
 
-    const randDen = () => denominadores[rand(0, denominadores.length - 1)]
-    const randNum = (den) => rand(Math.max(1, numRange[0]), Math.min(den - 1, numRange[1]))
-
-    const tipos = ['suma', 'resta', 'multiplicacion', 'division']
-    const tipo = tipos[rand(0, tipos.length - 1)]
-
-    let n1, d1, n2, d2
-    let resN, resD
-
-    // MCD para simplificar
-    const mcd = (a, b) => (b === 0 ? a : mcd(b, a % b))
-
-    const simplificar = (n, d) => {
-      const div = mcd(n, d)
-      return [n / div, d / div]
-    }
-
-    switch (tipo) {
-      case 'suma':
-        d1 = randDen()
-        d2 = d1
-        n1 = randNum(d1)
-        n2 = randNum(d2)
-        resN = n1 + n2
-        resD = d1
-        break
-      case 'resta':
-        d1 = randDen()
-        d2 = d1
-        n1 = randNum(d1)
-        n2 = rand(1, n1)
-        resN = n1 - n2
-        resD = d1
-        break
-      case 'multiplicacion':
-        d1 = randDen()
-        d2 = randDen()
-        n1 = randNum(d1)
-        n2 = randNum(d2)
-        resN = n1 * n2
-        resD = d1 * d2
-        break
-      case 'division':
-        d1 = randDen()
-        d2 = randDen()
-        n1 = randNum(d1)
-        n2 = randNum(d2)
-        resN = n1 * d2
-        resD = d1 * n2
-        break
-    }
-
-    ;[resN, resD] = simplificar(resN, resD)
-
-    const answer = `${resN}/${resD}`
-
-    const opChar = tipo === 'suma' ? '+' : tipo === 'resta' ? '−' : tipo === 'multiplicacion' ? '×' : '÷'
-    const question = `${n1}/${d1} ${opChar} ${n2}/${d2}`
-
-    // Generar opciones falsas (fracciones)
-    const choices = new Set([answer])
-    while (choices.size < 4) {
-      const fakeN = resN + rand(-2, 2)
-      const fakeD = resD + rand(-2, 2)
-      if (fakeN > 0 && fakeD > 0) {
-        choices.add(`${fakeN}/${fakeD}`)
-      }
-    }
-
-    return {
-      question,
-      answer,
-      choices: [...choices].sort(() => Math.random() - 0.5),
-      op: tipo
-    }
-  },
-}
-
-// Genera opciones de selección múltiple alrededor de la respuesta correcta
-const generateChoices = (correct, count = 4) => {
-  const choices = new Set([correct])
-  while (choices.size < count) {
-    const offset = rand(-5, 5)
-    const candidate = correct + offset
-    if (candidate > 0 && candidate !== correct) choices.add(candidate)
+  if (difficulty === 1) {
+    denominadores = [2, 3, 4, 5]
+    numRange = [1, 5]
+  } else if (difficulty === 2) {
+    denominadores = [6, 7, 8, 9, 10, 11, 12]
+    numRange = [3, 20]
   }
-  return [...choices].sort(() => Math.random() - 0.5)
-}
 
-export function useMathQuestion(moduleId, dificultad = 1) {
-  const generate = useCallback(() => {
-    const gen = GENERATORS[moduleId] ?? GENERATORS.sumas
-    const q = gen(dificultad)
-    if (!q.choices) {
-      q.choices = generateChoices(q.answer)
-    }
-    return q
-  }, [moduleId, dificultad])
+  const randDen = () => denominadores[rand(0, denominadores.length - 1)]
 
-  const [question, setQuestion] = useState(generate)
+  const randNum = (den) =>
+    rand(Math.max(1, numRange[0]), Math.min(den - 1, numRange[1]))
 
-  const next = useCallback(() => setQuestion(generate()), [generate])
+  // Todas las operaciones con la misma probabilidad
+  const tipos = difficulty === 2
+    ? [
+        'suma_mismo',
+        'suma_diferente',
+        'resta_mismo',
+        'resta_diferente',
+        'multiplicacion',
+        'division'
+      ]
+    : [
+        'suma_mismo',
+        'resta_mismo',
+        'multiplicacion',
+        'division'
+      ]
 
-  return { question, next }
+  const tipo = tipos[rand(0, tipos.length - 1)]
+
+  let n1, d1, n2, d2
+  let resN, resD
+
+  // MCD para simplificar
+  const mcd = (a, b) => (b === 0 ? a : mcd(b, a % b))
+
+  const simplificar = (n, d) => {
+    const div = mcd(n, d)
+    return [n / div, d / div]
+  }
+
+  switch (tipo) {
+
+    // ======================
+    // SUMA MISMO DENOMINADOR
+    // ======================
+    case 'suma_mismo':
+      d1 = randDen()
+      d2 = d1
+
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 + n2
+      resD = d1
+      break
+
+    // ==========================
+    // SUMA DISTINTO DENOMINADOR
+    // ==========================
+    case 'suma_diferente':
+      d1 = randDen()
+
+      do {
+        d2 = randDen()
+      } while (d1 === d2)
+
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = (n1 * d2) + (n2 * d1)
+      resD = d1 * d2
+      break
+
+    // =======================
+    // RESTA MISMO DENOMINADOR
+    // =======================
+    case 'resta_mismo':
+      d1 = randDen()
+      d2 = d1
+
+      n1 = randNum(d1)
+      n2 = rand(1, n1)
+
+      resN = n1 - n2
+      resD = d1
+      break
+
+    // =========================
+    // RESTA DISTINTO DENOMINADOR
+    // =========================
+    case 'resta_diferente':
+      d1 = randDen()
+
+      do {
+        d2 = randDen()
+      } while (d1 === d2)
+
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      // Evitar negativos
+      while ((n1 * d2) < (n2 * d1)) {
+        n1 = randNum(d1)
+        n2 = randNum(d2)
+      }
+
+      resN = (n1 * d2) - (n2 * d1)
+      resD = d1 * d2
+      break
+
+    // ======================
+    // MULTIPLICACIÓN
+    // ======================
+    case 'multiplicacion':
+      d1 = randDen()
+      d2 = randDen()
+
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 * n2
+      resD = d1 * d2
+      break
+
+    // ======================
+    // DIVISIÓN
+    // ======================
+    case 'division':
+      d1 = randDen()
+      d2 = randDen()
+
+      n1 = randNum(d1)
+      n2 = randNum(d2)
+
+      resN = n1 * d2
+      resD = d1 * n2
+      break
+  }
+
+  // Simplificar resultado
+  ;[resN, resD] = simplificar(resN, resD)
+
+  // Formato limpio de respuesta
+  const formatFraction = (n, d) => {
+    if (n === 0) return '0'
+    if (d === 1) return `${n}`
+    return `${n}/${d}`
+  }
+
+  const answer = formatFraction(resN, resD)
+
+  const op =
+    tipo.includes('suma')
+      ? 'suma'
+      : tipo.includes('resta')
+      ? 'resta'
+      : tipo
+
+  const opChar =
+    op === 'suma'
+      ? '+'
+      : op === 'resta'
+      ? '−'
+      : op === 'multiplicacion'
+      ? '×'
+      : '÷'
+
+  const question = `${n1}/${d1} ${opChar} ${n2}/${d2}`
+
+  // Opciones falsas prolijas
+  const choices = new Set([answer])
+
+  while (choices.size < 4) {
+
+    let fakeN = resN + rand(-2, 2)
+    let fakeD = resD + rand(-2, 2)
+
+    if (fakeN <= 0 || fakeD <= 0) continue
+
+    ;[fakeN, fakeD] = simplificar(fakeN, fakeD)
+
+    choices.add(formatFraction(fakeN, fakeD))
+  }
+
+  return {
+    question,
+    answer,
+    choices: [...choices].sort(() => Math.random() - 0.5),
+    op
+  }
+},
 }
